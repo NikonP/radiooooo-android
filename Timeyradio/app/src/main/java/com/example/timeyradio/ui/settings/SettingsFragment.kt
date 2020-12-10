@@ -99,13 +99,11 @@ class SettingsFragment : Fragment()  {
 //                        editor.clear()
                         editor.putString(countryKey, settingsViewModel.currentCountry.value.toString()).apply()
                     }
-                } else {
-                    if(prefs.contains(countryKey))
-                        settingsViewModel.saveCurrentCountry(
-                            prefs.getString(countryKey, "") as String
-                        )
                 }
 //                is_stop = false
+                if(prefs.contains(countryKey))
+                    settingsViewModel.saveCurrentCountry(prefs.getString(countryKey, "") as String)
+                spinnerCountry?.setSelection(adapter.getPosition(settingsViewModel.currentCountry.value.toString()))
             }
             override fun onNothingSelected(parent: AdapterView<*>){
 
@@ -134,13 +132,11 @@ class SettingsFragment : Fragment()  {
 //                        editor.clear()
                         editor.putString(moodKey, settingsViewModel.currentMood.value.toString()).apply()
                     }
-                }else {
-                    if(prefs.contains(moodKey))
-                        settingsViewModel.saveCurrentMood(
-                            prefs.getString(moodKey, "") as String
-                        )
                 }
 //                is_stop = false
+                if(prefs.contains(moodKey))
+                    settingsViewModel.saveCurrentMood(prefs.getString(moodKey, "") as String)
+                spinnerMood?.setSelection(adapter.getPosition(settingsViewModel.currentMood.value.toString()))
             }
             override fun onNothingSelected(parent: AdapterView<*>){
 
@@ -161,17 +157,13 @@ class SettingsFragment : Fragment()  {
             @SuppressLint("CommitPrefEdits")
             override fun onItemSelected(parent:AdapterView<*>, view: View?, position: Int, id: Long){
                 if(!(is_stop)){
+
                     if(parent.getItemAtPosition(position) != null){
                         settingsViewModel.saveCurrentYear(parent.getItemAtPosition(position).toString())
                         val editor = prefs.edit()
 //                        editor.clear()
                         editor.putString(yearKey, settingsViewModel.currentYear.value.toString()).apply()
                     }
-                }else {
-                    if(prefs.contains(yearKey))
-                        settingsViewModel.saveCurrentYear(
-                            prefs.getString(yearKey, "") as String
-                        )
                 }
                 is_stop = false
             }
@@ -179,5 +171,9 @@ class SettingsFragment : Fragment()  {
 
             }
         }
+        if(prefs.contains(yearKey))
+            settingsViewModel.saveCurrentYear(prefs.getString(yearKey, "") as String)
+
+        spinnerYear?.setSelection(adapter.getPosition(settingsViewModel.currentYear.value.toString()))
     }
 }
