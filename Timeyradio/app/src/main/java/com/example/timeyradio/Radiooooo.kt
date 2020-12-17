@@ -1,13 +1,15 @@
 package com.example.timeyradio
 
 import android.util.Log
+import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
 import java.io.StringReader
 
-class CodesByMoods(val data: HashMap<String, List<String>>)
+class Song(val artist: String, val album: String, val title: String, val year: String, val url: String)
 
 class Radiooooo {
     private var _countryKey: String = "GBR"
@@ -17,6 +19,8 @@ class Radiooooo {
     private val _baseUrl: String = "https://radiooooo.app"
     private val _getSongEndpoint: String = "$_baseUrl/play"
     private val _getCodesEndpoint: String = "$_baseUrl/country/mood"
+
+    private var _currentSong: Song = Song("", "", "", "", "")
 
     private var _countryKeysList: List<String>? = null
 
@@ -87,6 +91,50 @@ class Radiooooo {
     }
 
     fun getNextSongUrl() {
+        val thread = Thread(Runnable {
+            Log.d("debug", "!!!THREAD!!!")
 
+            val (request, response, result) = _getSongEndpoint
+                .httpPost(listOf(
+                    "moods" to setOf(_moodKey),
+                    "decades" to setOf(_yearKey),
+                    "isocodes" to setOf(_countryKey)
+                )).responseString()
+
+            when (result) {
+                is Result.Failure -> {
+                    val ex = result.getException()
+                    Log.d("debug", "Request error: $ex")
+                }
+                is Result.Success -> {
+                    val data = result.get()
+
+                    Log.d("debug", "data: $data")
+
+                    if(data.length > 0) {
+                        val songInfo = Klaxon().parseJsonObject(StringReader(data))
+                        val title = songInfo["title"] as String
+                        val artist = songInfo["artist"] as String
+                        val album = songInfo["album"] as String
+                        val year = songInfo["year"] as String
+
+                        val links = songInfo["links"] as JsonObject
+                        val fileDirectUrl = links["ogg"] as String
+
+                        val song = Song(artist, album, title, year, fileDirectUrl)
+
+                        _currentSong = song
+                    } else {
+                        Log.d("debug", "Warning. Empty response (in get codes)");
+                    }
+                }
+            }
+        })
+
+        thread.start()
+    }
+
+    fun getCurrentSong(): Song {
+        return _currentSong
     }
 }

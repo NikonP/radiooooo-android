@@ -49,7 +49,7 @@ class SettingsFragment : Fragment()  {
 
         // только временно для проверок
         radio.setConfig("GBR", "1970", "FAST")
-        radio.receiveCountryCodes()
+        radio.getNextSongUrl()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
