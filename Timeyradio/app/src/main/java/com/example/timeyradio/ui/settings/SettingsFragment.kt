@@ -28,7 +28,10 @@ class SettingsFragment : Fragment()  {
     val countryKey = "COUNTRY_KEY"
     val yearKey = "YEAR_KEY"
     val moodKey = "MOOD_KEY"
-
+//    в данной реализации присутсвует куча говно-кода, чтобы сохранять текущие настройки
+//    чтобы получить текущиие значения настроек, нужно сначала создать экзмеляр SharedPreferences,
+//    prefs = (this.activity as Activity).getSharedPreferences("settings", Context.MODE_PRIVATE)
+//    после чего взять по ключу нужную опцию prefs.getString(countryKey, "") as String
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
             inflater: LayoutInflater,
