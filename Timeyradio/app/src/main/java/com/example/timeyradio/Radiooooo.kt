@@ -123,6 +123,8 @@ class Radiooooo(player: MusicPlayer) {
 
                         val song = Song(artist, album, title, year, fileDirectUrl)
 
+                        Log.d("debug", "song: $songInfo")
+
                         _currentSong = song
 
                         _player.setSong(song)
