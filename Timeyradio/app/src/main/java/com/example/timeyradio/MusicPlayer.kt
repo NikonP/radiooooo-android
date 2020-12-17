@@ -5,7 +5,7 @@ import android.util.Log
 
 class MusicPlayer {
     private val _mediaPlayer: MediaPlayer = MediaPlayer()
-    private var _currentSong = Song("", "", "", "", "")
+    private var _currentSong = Song("", "", "", "", "", "")
 
     fun setSong(song: Song) {
         try {
@@ -54,5 +54,9 @@ class MusicPlayer {
 
     fun songAlbum(): String {
         return _currentSong.album
+    }
+
+    fun songCoverUrl(): String {
+        return _currentSong.imgUrl
     }
 }

@@ -1,5 +1,8 @@
 package com.example.timeyradio.ui.player
 
+import android.icu.number.NumberFormatter.with
+import android.icu.number.NumberRangeFormatter.with
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +15,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.timeyradio.MusicPlayer
 import com.example.timeyradio.R
 import com.example.timeyradio.Radiooooo
-import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
 
 //выф
@@ -32,23 +34,24 @@ class PlayerFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_player, container, false)
 
         root.playButton.setOnClickListener { view ->
-            play()
+            play(root)
         }
         root.pauseButton.setOnClickListener {view ->
-            pause()
+            pause(root)
         }
         radio.setConfig("GBR", "1980", "FAST")
         return root
     }
 
     // для кнопочек
-    private fun pause() {
+    private fun pause(view: View) {
         Log.d("debug", "pause btn")
         musicPlayer.pause()
     }
 
-    private fun play() {
+    private fun play(view: View) {
         Log.d("debug", "play btn")
+
         if(!musicPlayer.isPlaying()) {
             radio.getNextSongUrl()
             musicPlayer.play()
