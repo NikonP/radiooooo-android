@@ -30,10 +30,7 @@ class PlayerFragment : Fragment() {
         playerViewModel =
                 ViewModelProvider(this).get(PlayerViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_player, container, false)
-//        val textView: TextView = root.findViewById(R.id.text_home)
-//        playerViewModel.text.observe(viewLifecycleOwner, Observer {
-//            textView.text = it
-//        })
+
         root.playButton.setOnClickListener { view ->
             play()
         }
