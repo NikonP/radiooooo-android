@@ -40,6 +40,10 @@ class MusicPlayer {
         _mediaPlayer.isLooping = state
     }
 
+    fun isPlaying(): Boolean {
+        return _mediaPlayer.isPlaying
+    }
+
     fun songArtist(): String {
         return _currentSong.artist
     }

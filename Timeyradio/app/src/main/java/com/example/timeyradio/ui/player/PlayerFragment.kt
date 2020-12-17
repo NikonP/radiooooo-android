@@ -1,6 +1,7 @@
 package com.example.timeyradio.ui.player
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.timeyradio.MusicPlayer
 import com.example.timeyradio.R
 import com.example.timeyradio.Radiooooo
+import kotlinx.android.synthetic.main.fragment_player.*
+import kotlinx.android.synthetic.main.fragment_player.view.*
 
 //выф
 class PlayerFragment : Fragment() {
@@ -31,15 +34,27 @@ class PlayerFragment : Fragment() {
 //        playerViewModel.text.observe(viewLifecycleOwner, Observer {
 //            textView.text = it
 //        })
+        root.playButton.setOnClickListener { view ->
+            play()
+        }
+        root.pauseButton.setOnClickListener {view ->
+            pause()
+        }
+        radio.setConfig("GBR", "1980", "FAST")
         return root
     }
 
     // для кнопочек
-    fun pause(view: View) {
-
+    private fun pause() {
+        Log.d("debug", "pause btn")
+        musicPlayer.pause()
     }
 
-    fun play(view: View) {
-
+    private fun play() {
+        Log.d("debug", "play btn")
+        if(!musicPlayer.isPlaying()) {
+            radio.getNextSongUrl()
+            musicPlayer.play()
+        }
     }
 }
