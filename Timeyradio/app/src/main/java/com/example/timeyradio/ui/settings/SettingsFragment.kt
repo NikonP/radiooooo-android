@@ -53,7 +53,7 @@ class SettingsFragment : Fragment()  {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt("IS_PAUSE", 1)
 //        outState.putString("CURRENT_SELECTED", settingsViewModel.text1.value)
-        Toast.makeText((this.context as Context),"123" , Toast.LENGTH_LONG).show()
+//        Toast.makeText((this.context as Context),"123" , Toast.LENGTH_LONG).show()
         super.onSaveInstanceState(outState)
     }
 

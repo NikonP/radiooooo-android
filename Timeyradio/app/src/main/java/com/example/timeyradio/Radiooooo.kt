@@ -92,15 +92,27 @@ class Radiooooo(player: MusicPlayer) {
         thread.start()
     }
 
-    fun getNextSongUrl() {
+    fun getNextSongUrl(moodSetting: String, isocodesSetting: String, decadesSetting: String) {
         val thread = Thread(Runnable {
             Log.d("debug", "!!!THREAD!!!")
+            var moodSettingU = moodSetting.toUpperCase()
+            var isocodesSettingU = isocodesSetting.toUpperCase()
+            var decadesSettingU = decadesSetting.toUpperCase()
+            Log.d("debug", moodSettingU + isocodesSettingU + decadesSettingU)
 
+            //default
+//            val (request, response, result) = _getSongEndpoint
+//                .httpPost(listOf(
+//                    "moods" to setOf(_moodKey),
+//                    "decades" to setOf(_yearKey),
+//                    "isocodes" to setOf(_countryKey)
+//                )).responseString()
+            //from the settings
             val (request, response, result) = _getSongEndpoint
                 .httpPost(listOf(
-                    "moods" to setOf(_moodKey),
-                    "decades" to setOf(_yearKey),
-                    "isocodes" to setOf(_countryKey)
+                    "moods" to setOf(moodSettingU),
+                    "decades" to setOf(decadesSettingU),
+                    "isocodes" to setOf(isocodesSettingU)
                 )).responseString()
 
             when (result) {
