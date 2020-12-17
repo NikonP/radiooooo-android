@@ -15,8 +15,6 @@ class SettingsViewModel(state: SavedStateHandle) : ViewModel() {
     }
     val currentCountry : MutableLiveData<String> = savedStateHandle.getLiveData("curCountry", "ABW")
 
-
-
     fun saveCurrentMood(current: String){
         savedStateHandle.set("curMood", current)
     }

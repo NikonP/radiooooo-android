@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.navGraphViewModels
 import com.example.timeyradio.R
+import com.example.timeyradio.Radiooooo
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -26,6 +27,9 @@ class SettingsFragment : Fragment()  {
     val countryKey = "COUNTRY_KEY"
     val yearKey = "YEAR_KEY"
     val moodKey = "MOOD_KEY"
+
+    val radio: Radiooooo = Radiooooo()
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -43,7 +47,9 @@ class SettingsFragment : Fragment()  {
         super.onCreate(savedInstanceState)
         setRetainInstance(true)
 
-
+        // только временно для проверок
+        radio.setConfig("GBR", "1970", "FAST")
+        radio.receiveCountryCodes()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
