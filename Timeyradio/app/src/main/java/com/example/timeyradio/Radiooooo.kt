@@ -9,9 +9,7 @@ import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
 import java.io.StringReader
 
-class Song(val artist: String, val album: String, val title: String, val year: String, val url: String)
-
-class Radiooooo {
+class Radiooooo(player: MusicPlayer) {
     private var _countryKey: String = "GBR"
     private var _yearKey: String = "1980"
     private var _moodKey: String = "FAST"
@@ -23,6 +21,8 @@ class Radiooooo {
     private var _currentSong: Song = Song("", "", "", "", "")
 
     private var _countryKeysList: List<String>? = null
+
+    private val _player: MusicPlayer = player
 
     fun setConfig(countryKey: String, yearKey: String, moodKey: String) {
         _countryKey = countryKey
@@ -111,7 +111,7 @@ class Radiooooo {
 
                     Log.d("debug", "data: $data")
 
-                    if(data.length > 0) {
+                    if(data.isNotEmpty()) {
                         val songInfo = Klaxon().parseJsonObject(StringReader(data))
                         val title = songInfo["title"] as String
                         val artist = songInfo["artist"] as String
@@ -124,6 +124,10 @@ class Radiooooo {
                         val song = Song(artist, album, title, year, fileDirectUrl)
 
                         _currentSong = song
+
+                        _player.setSong(song)
+
+                        _player.play()
                     } else {
                         Log.d("debug", "Warning. Empty response (in get codes)");
                     }
