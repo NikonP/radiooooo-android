@@ -1,6 +1,7 @@
 package com.example.timeyradio
 
 import android.util.Log
+import com.beust.klaxon.Json
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Klaxon
 
@@ -15,10 +16,11 @@ class Radiooooo(player: MusicPlayer) {
     private var _moodKey: String = "FAST"
 
     private val _baseUrl: String = "https://radiooooo.app"
+    private val _assetsUrl: String = "https://asset.radiooooo.com"
     private val _getSongEndpoint: String = "$_baseUrl/play"
     private val _getCodesEndpoint: String = "$_baseUrl/country/mood"
 
-    private var _currentSong: Song = Song("", "", "", "", "")
+    private var _currentSong: Song = Song("", "", "", "", "", "")
 
     private var _countryKeysList: List<String>? = null
 
@@ -121,7 +123,12 @@ class Radiooooo(player: MusicPlayer) {
                         val links = songInfo["links"] as JsonObject
                         val fileDirectUrl = links["ogg"] as String
 
-                        val song = Song(artist, album, title, year, fileDirectUrl)
+                        val imgData = songInfo["image"] as JsonObject
+                        val imgPath = imgData["path"] as String
+                        val imgName = imgData["filename"] as String
+                        val imgUrl = "$_assetsUrl/$imgPath$imgName"
+
+                        val song = Song(artist, album, title, year, fileDirectUrl, imgUrl)
 
                         Log.d("debug", "song: $songInfo")
 
