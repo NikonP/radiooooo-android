@@ -3,68 +3,119 @@ package com.example.timeyradio.ui.player
 import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
-import android.icu.number.NumberFormatter.with
-import android.icu.number.NumberRangeFormatter.with
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.core.net.toUri
 import com.example.timeyradio.MusicPlayer
 import com.example.timeyradio.R
 import com.example.timeyradio.Radiooooo
 import kotlinx.android.synthetic.main.fragment_player.view.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.BitmapImageViewTarget
+
 
 //выф
 class PlayerFragment : Fragment() {
 
     private lateinit var playerViewModel: PlayerViewModel
     private val musicPlayer: MusicPlayer = MusicPlayer()
-    private val radio: Radiooooo = Radiooooo(musicPlayer)
+    private val radio: Radiooooo = Radiooooo()
     private lateinit var prefs: SharedPreferences
-    val countryKey = "COUNTRY_KEY"
-    val yearKey = "YEAR_KEY"
-    val moodKey = "MOOD_KEY"
+    private val countryKey = "COUNTRY_KEY"
+    private val yearKey = "YEAR_KEY"
+    private val moodKey = "MOOD_KEY"
+
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         playerViewModel =
                 ViewModelProvider(this).get(PlayerViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_player, container, false)
         prefs = (this.activity as Activity).getSharedPreferences("settings", Context.MODE_PRIVATE)
-        root.playButton.setOnClickListener { view ->
-            play(root)
+        root.playPauseButton.setOnClickListener { view ->
+            playPause(root)
         }
-        root.pauseButton.setOnClickListener {view ->
-            pause(root)
+        root.nextTrackButton.setOnClickListener { view ->
+            nextTrack(root)
         }
-        radio.setConfig("GBR", "1980", "FAST")
+        val country = prefs.getString(countryKey, "") as String
+        val year = prefs.getString(yearKey, "") as String
+        val mood = prefs.getString(moodKey, "") as String
+        radio.getNextSongUrl(mood, country, year)
+
+        GlobalScope.launch {
+            while (radio.getCurrentSong().url.isEmpty()) {}
+            val currentSong = radio.getCurrentSong()
+            musicPlayer.setSong(currentSong)
+            updateCover(root.albumCover, currentSong.imgUrl)
+            val splashScreen = childFragmentManager.findFragmentById(R.id.splashArtFragment)
+            if (splashScreen != null) {
+                Log.d("debug", "found the fragment in ${splashScreen.parentFragment.toString()}")
+                childFragmentManager.beginTransaction().hide(splashScreen).commit()
+            }
+            radio.getNextSongUrl(mood, country, year)
+        }
         return root
     }
 
     // для кнопочек
-    private fun pause(view: View) {
+    private fun playPause(view: View) = if (musicPlayer.isPlaying()) {
         Log.d("debug", "pause btn")
         musicPlayer.pause()
+        view.playPauseButton.setImageResource(R.drawable.ic_media_play)
+    } else {
+        Log.d("debug", "play btn")
+        musicPlayer.play()
+        view.playPauseButton.setImageResource(R.drawable.ic_media_pause)
     }
 
-    private fun play(view: View) {
-        Log.d("debug", "play btn")
-        var country = prefs.getString(countryKey, "") as String
-        var year = prefs.getString(yearKey, "") as String
-        var mood = prefs.getString(moodKey, "") as String
-        Toast.makeText((this.context as Context), mood + " " + country + " " + year, Toast.LENGTH_LONG).show()
-        if(!musicPlayer.isPlaying()) {
-            radio.getNextSongUrl(mood, country, year)
+    private fun nextTrack(view: View) {
+        val country = prefs.getString(countryKey, "") as String
+        val year = prefs.getString(yearKey, "") as String
+        val mood = prefs.getString(moodKey, "") as String
+        Toast.makeText(
+            (this.context as Context),
+            "$mood $country $year",
+            Toast.LENGTH_LONG
+        ).show()
+        val currentSong = radio.getCurrentSong()
+        view.albumCover.setImageResource(R.drawable.cover_template)
+        updateCover(view.albumCover, currentSong.imgUrl)
+        radio.getNextSongUrl(mood, country, year)
+
+        if (musicPlayer.isPlaying()) {
+            musicPlayer.reset()
+            musicPlayer.setSong(currentSong)
             musicPlayer.play()
+        } else {
+            musicPlayer.reset()
+            musicPlayer.setSong(currentSong)
         }
+    }
+
+    private fun updateCover(view: ImageView, url: String) {
+        val thread = Thread( Runnable {
+            try {
+                val imgUri = url.toUri().buildUpon().scheme("https").build()
+                Glide.with(view.context)
+                    .asBitmap()
+                    .load(imgUri)
+                    .into(BitmapImageViewTarget(view))
+            } catch (th: Throwable) {
+                Log.d("debug", "album update error: $th")
+            }
+        })
+        thread.start()
     }
 }

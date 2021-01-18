@@ -55,6 +55,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
 
     implementation 'com.github.kittinunf.fuel:fuel:2.3.1' // http движёк
+    implementation "com.github.bumptech.glide:glide:4.11.0"
     implementation 'com.beust:klaxon:5.0.1'               // парсчер json
 
     testImplementation 'junit:junit:4.+'
