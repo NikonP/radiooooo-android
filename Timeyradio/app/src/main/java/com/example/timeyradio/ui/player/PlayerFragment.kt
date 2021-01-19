@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -49,6 +50,9 @@ class PlayerFragment : Fragment() {
         root.nextTrackButton.setOnClickListener { view ->
             nextTrack(root)
         }
+        root.prevTrackButton.setOnClickListener {
+            musicPlayer.switchLoop()
+        }
         val country = prefs.getString(countryKey, "") as String
         val year = prefs.getString(yearKey, "") as String
         val mood = prefs.getString(moodKey, "") as String
@@ -58,6 +62,10 @@ class PlayerFragment : Fragment() {
             while (radio.getCurrentSong().url.isEmpty()) {}
             val currentSong = radio.getCurrentSong()
             musicPlayer.setSong(currentSong)
+            root.post( Runnable {
+                updateText(root.songName, currentSong.title)
+                updateText(root.songArtist, currentSong.artist)
+            })
             updateCover(root.albumCover, currentSong.imgUrl)
             val splashScreen = childFragmentManager.findFragmentById(R.id.splashArtFragment)
             if (splashScreen != null) {
@@ -91,6 +99,8 @@ class PlayerFragment : Fragment() {
         ).show()
         val currentSong = radio.getCurrentSong()
         view.albumCover.setImageResource(R.drawable.cover_template)
+        updateText(view.songName, currentSong.title)
+        updateText(view.songArtist, currentSong.artist)
         updateCover(view.albumCover, currentSong.imgUrl)
         radio.getNextSongUrl(mood, country, year)
 
@@ -117,5 +127,9 @@ class PlayerFragment : Fragment() {
             }
         })
         thread.start()
+    }
+
+    private fun updateText(view: TextView, str: String) {
+        view.setText(str)
     }
 }
