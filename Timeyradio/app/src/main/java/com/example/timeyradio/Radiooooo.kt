@@ -10,7 +10,7 @@ import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
 import java.io.StringReader
 
-class Radiooooo(player: MusicPlayer) {
+class Radiooooo() {
     private var _countryKey: String = "GBR"
     private var _yearKey: String = "1980"
     private var _moodKey: String = "FAST"
@@ -23,8 +23,6 @@ class Radiooooo(player: MusicPlayer) {
     private var _currentSong: Song = Song("", "", "", "", "", "")
 
     private var _countryKeysList: List<String>? = null
-
-    private val _player: MusicPlayer = player
 
     fun setConfig(countryKey: String, yearKey: String, moodKey: String) {
         _countryKey = countryKey
@@ -138,17 +136,13 @@ class Radiooooo(player: MusicPlayer) {
                         val imgData = songInfo["image"] as JsonObject
                         val imgPath = imgData["path"] as String
                         val imgName = imgData["filename"] as String
-                        val imgUrl = "$_assetsUrl/$imgPath$imgName"
+                        val imgUrl = "$_assetsUrl/$imgPath" + "medium/$imgName"
 
                         val song = Song(artist, album, title, year, fileDirectUrl, imgUrl)
 
                         Log.d("debug", "song: $songInfo")
 
                         _currentSong = song
-
-                        _player.setSong(song)
-
-                        _player.play()
                     } else {
                         Log.d("debug", "Warning. Empty response (in get codes)");
                     }

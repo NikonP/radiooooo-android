@@ -32,6 +32,10 @@ class MusicPlayer {
         _mediaPlayer.pause()
     }
 
+    fun reset() {
+        _mediaPlayer.reset()
+    }
+
     fun restart() {
         _mediaPlayer.seekTo(0)
     }
