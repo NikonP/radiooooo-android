@@ -6,19 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.player.PlayerFragment">
 
-    <fragment
-        android:id="@+id/splashArtFragment"
-        android:name="com.example.timeyradio.ui.player.SplashScreenFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:layout="@layout/splash_art" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/playPauseButton"
         android:layout_width="wrap_content"
@@ -100,5 +87,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <fragment
+        android:id="@+id/splashArtFragment"
+        android:name="com.example.timeyradio.ui.player.SplashScreenFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout="@layout/splash_art" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

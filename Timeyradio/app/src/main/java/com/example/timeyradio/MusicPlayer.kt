@@ -40,6 +40,10 @@ class MusicPlayer {
         _mediaPlayer.seekTo(0)
     }
 
+    fun release() {
+        _mediaPlayer.release()
+    }
+
     fun loop(state: Boolean) {
         _mediaPlayer.isLooping = state
     }

@@ -77,6 +77,12 @@ class PlayerFragment : Fragment() {
         return root
     }
 
+    override fun onStop() {
+        musicPlayer.pause()
+        musicPlayer.release()
+        super.onStop()
+    }
+
     // для кнопочек
     private fun playPause(view: View) = if (musicPlayer.isPlaying()) {
         Log.d("debug", "pause btn")
