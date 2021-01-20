@@ -44,6 +44,10 @@ class MusicPlayer {
         _mediaPlayer.isLooping = state
     }
 
+    fun switchLoop() {
+        _mediaPlayer.setLooping(!_mediaPlayer.isLooping)
+    }
+
     fun isPlaying(): Boolean {
         return _mediaPlayer.isPlaying
     }
